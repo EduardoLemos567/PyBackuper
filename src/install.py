@@ -5,6 +5,8 @@
     A copy can be accessed in: https://github.com/EduardoLemos567/PyBackuper/blob/master/LICENSE
 :author:
     Eduardo Lemos de Moraes
+:description:
+    Used to install the required packages.
 """
 import subprocess
 import sys

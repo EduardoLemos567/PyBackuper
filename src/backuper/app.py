@@ -1,13 +1,14 @@
 """
 :license:
     license is described in the LICENSE file provided.
-    A copy can be accessed in: https://github.com/EduardoLemos567/PyBackuper/blob/master/LICENSE
+    A copy can be accessed in: https://github.com/dev-567/PyBackuper/blob/main/LICENSE
 :author:
     Eduardo Lemos de Moraes
 :packages:
     packages used in the project:
     - oscrypto
     - google-api-python-client google-auth-httplib2 google-auth-oauthlib
+    You can install these packages using the install.py provided.
 """
 import sys
 import datetime
@@ -18,6 +19,7 @@ import atexit
 
 from . import localstorage
 from . import crypto
+from . import streamtologger
 
 
 class App:
@@ -39,10 +41,15 @@ class App:
     SALT_FILENAME = "salt" + PLAINBYTES_EXTENSION
     TOKEN_FILENAME = "token" + PACKED_FILE_EXTENSION
 
-    def __init__(self, config_file_path):
+    def __init__(self, config_file_path, press_enter_to_finish=False):
+        """
+        :param config_file_path str | pathlib.Path: path pointing to the config file.
+        :param press_enter_to_finish bool: if True, will wait for press enter input when the script is done.
+        """
         self.config_file_path = config_file_path
-        # config instance, remember if you change this you have to update the
-        # local_storage and remove_storage versions of the config.
+        self.press_enter_to_finish = press_enter_to_finish
+        # config instance: remember if you change this you have to update the
+        # local_storage and remote_storage versions of the config.
         self.config = None  # Config instance from config file
         self.logger = None  # logger used to communicate messages to user/dev
         self.local_storage = None
@@ -165,7 +172,7 @@ class App:
         )  # all inclusive, cant be zero = inactive
         if self.config.format_debug_flag:
             formatter = logging.Formatter(
-                "[%(processName)s|%(threadName)s][%(asctime)s][%(levelname)s]\n%(message)s"
+                "(%(processName)s | %(threadName)s | %(asctime)s | %(levelname)s)\n%(message)s"
             )
         else:
             formatter = logging.Formatter("%(message)s")
@@ -193,6 +200,14 @@ class App:
         # stream/prompt config
         handler.setLevel(debug_level)  # console logging level
         self.logger.addHandler(handler)
+        if self.config.print_debug_flag:
+            # only redirect python errors if in debug mode
+            stderr = streamtologger.StreamToLogger(self.logger, logging.DEBUG)
+            # do a small test as DEBUG level
+            stderr.write("Stderr redirect is working.")
+            stderr.flush()
+            stderr.level = logging.ERROR  # change to ERROR level
+            sys.stderr = stderr  # redirect sys.stderr into StreamToLogger instance
         self.logger.info("Logger created.")
 
     def _load_app_key(self):
@@ -810,3 +825,5 @@ class App:
             self.local_storage.clear_tempfiles()
         if self.logger is not None:
             self.logger.info("Bye.")
+        if self.press_enter_to_finish:
+            input("Press Enter to finish... ")
