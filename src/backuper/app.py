@@ -88,6 +88,7 @@ class App:
             "compression_ratio",
             "encryption_save_salted_password_flag",
             "encryption_salted_folder_path",
+            "app_key_folder_path",
         )
         for key in keys:
             if key not in config_instance.__dict__:
@@ -218,7 +219,7 @@ class App:
         them as plain text.
         """
         self.logger.debug("Loading app key...")
-        key_path = pathlib.Path(__file__).parent / self.APP_KEY_FILENAME
+        key_path = self.config.app_key_folder_path / self.APP_KEY_FILENAME
         if not key_path.exists():
             self.logger.debug("App key not found, generating...")
             self.app_key = crypto.generate_app_key()
@@ -399,8 +400,8 @@ class App:
             self.local_storage.dispose_tempfile(temp_file_path)
             self.local_storage.dispose_tempfile(temp_file_path2)
         self.logger.debug(
-            "(files added on local:{} / files copied from remote: {})".format(
-                counter2, counter1
+            "(total files added on local:{} / files acquired from remote: {} / files copied from downloaded: {})".format(
+                counter2, counter1, counter2 - counter1
             )
         )
 
@@ -674,7 +675,7 @@ class App:
             finally:
                 self.local_storage.dispose_tempfile(temp_file_path)
             self.logger.info(
-                "(files needed to be copied into remote: {} / files actually copied into remote: {} / skipped: {})".format(
+                "(total files to be on remote: {} / new files copied into remote: {} / skipped: {})".format(
                     counter1, counter2, counter1 - counter2
                 )
             )
