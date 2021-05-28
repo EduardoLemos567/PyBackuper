@@ -110,7 +110,7 @@ class LocalStorage:
                 manifest_instance, include_files, timestamp_files=False
             )
         if include_files:
-            self.app.logger.log(9, "Updating signatures...")
+            self.app.logger.log(9, "Updating files signatures on manifest...")
             self.update_signatures(manifest_instance)
         self.app.logger.debug("Local manifest built.")
         return manifest_instance
