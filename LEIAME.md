@@ -22,6 +22,10 @@ aplicativo, qualquer outro arquivo no seu drive não pode ser alterado.)
 3. Agora siga a parte "Create a OAuth client ID credential".
  - Na etapa 5, escolha "Create Desktop application credentials".
 ##### Salve o arquivo .json em algum lugar acessível para nosso aplicativo.
+O arquivo json deve ser parecer com esse formato abaixo (no lugar de zeros e 'a's você terá o "client_id" e "client_secret" provido pelo Google):
+```json
+{"installed":{"client_id":"00000000000000-aaaaaaaaaaaaaaaaaaaaaaaaaaaaa.apps.googleusercontent.com","project_id":"project_name","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"A0A0A0A0A0A0A0A0A0A0","redirect_uris":["urn:ietf:wg:oauth:2.0:oob","http://localhost"]}}
+```
 
 #### 3. Crie a pasta do seu projeto, copie o arquivo "config_example.py" (você pode renomeá-lo).
  Altere essas linhas:
