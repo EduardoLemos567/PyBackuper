@@ -35,20 +35,20 @@ class DiskRemoteStorage(remotestorage.RemoteStorage):
     def set_manifest(self, manifest_instance):
         self.app.local_storage.pickle_pack(
             manifest_instance,
-            self.app.config.remote_folder_path / self.app.MANIFEST_FILE_NAME,
+            self.app.config.remote_folder_path / self.app.MANIFEST_FILENAME,
         )
         return True
 
     def get_manifest(self):
-        if (self.app.config.remote_folder_path / self.app.MANIFEST_FILE_NAME).exists():
+        if (self.app.config.remote_folder_path / self.app.MANIFEST_FILENAME).exists():
             return self.app.local_storage.unpack_unpickle(
-                self.app.config.remote_folder_path / self.app.MANIFEST_FILE_NAME
+                self.app.config.remote_folder_path / self.app.MANIFEST_FILENAME
             )
         else:
             return None
 
     def delete_manifest(self):
-        manifest_path = self.app.config.remote_folder_path / self.app.MANIFEST_FILE_NAME
+        manifest_path = self.app.config.remote_folder_path / self.app.MANIFEST_FILENAME
         if manifest_path.exists():
             manifest_path.unlink()
             return True
@@ -82,6 +82,7 @@ class DiskRemoteStorage(remotestorage.RemoteStorage):
             if node_path.is_file() and node_path.stem == signature:
                 self.app.local_storage.unpack(node_path, dest_abs_path)
                 return True
+        self.app.logger.log(9, "file get, signature: {}".format(signature))
         return False
 
     def set_file(self, src_abs_path, signature):
@@ -96,6 +97,7 @@ class DiskRemoteStorage(remotestorage.RemoteStorage):
             / self.FILES_FOLDERNAME
             / (signature + self.app.PACKED_FILE_EXTENSION),
         )
+        self.app.logger.log(9, "file set, signature: {}".format(signature))
         return True
 
     def delete_file(self, signature):

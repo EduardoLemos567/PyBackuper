@@ -436,7 +436,7 @@ class GDriveRemoteStorage(remotestorage.RemoteStorage):
                 )
             )
             return None
-        self.app.logger.log(9, "file uploaded id: {}".format(response["id"]))
+        self.app.logger.log(9, "file uploaded, remote id: {}".format(response["id"]))
         return response["id"]
 
     def _download_file(self, remote_id, local_abs_file_path):
@@ -462,7 +462,7 @@ class GDriveRemoteStorage(remotestorage.RemoteStorage):
                     )
                 )
                 return False
-        self.app.logger.log(9, "file downloaded id: {}".format(remote_id))
+        self.app.logger.log(9, "file downloaded, remote id: {}".format(remote_id))
         return True
 
     def set_file(self, src_abs_path, signature):
